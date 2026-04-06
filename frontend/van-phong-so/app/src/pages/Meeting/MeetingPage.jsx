@@ -32,6 +32,14 @@ const MeetingPage = () => {
 
   loadData();
 }, []);
+useEffect(() => {
+  getRooms()
+    .then(res => {
+      console.log(res.data); // để test
+      setRooms(res.data);
+    })
+    .catch(err => console.error(err));
+}, []);
 
   const fetchData = async () => {
     const res = await getMeetings();
@@ -116,8 +124,16 @@ const MeetingPage = () => {
           </li>
         ))}
       </ul>
+      <h3>Danh sách phòng</h3>
+  {rooms.map(room => (
+    <div key={room.id}>{room.name}</div>
+  ))}
+
     </div>
+    
+    
   );
+
 };
 
 export default MeetingPage;
