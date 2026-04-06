@@ -1,8 +1,9 @@
-package com.vanphongso.tam.controller;
+package com.vanphongso.tam.Controller;
 
 import com.vanphongso.tam.entity.Room;
 import com.vanphongso.tam.Sevice.RoomService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 

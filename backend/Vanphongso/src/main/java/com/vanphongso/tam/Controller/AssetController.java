@@ -1,62 +1,50 @@
-package com.vanphongso.tam.entity;
+package com.vanphongso.tam.Controller;
 
-import jakarta.persistence.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import com.vanphongso.tam.entity.Asset;
+import com.vanphongso.tam.repository.AssetRepository;
+import org.springframework.web.bind.annotation.*;
 
-@Entity
-@Table(name = "asset")
-public class Asset {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@RestController
+@RequestMapping("/api/assets")
+public class AssetController {
 
-    private String name;
-    private int quantity;
-    private String status;
+    private final AssetRepository assetRepository;
 
-    // Constructor rỗng
-    public Asset() {
+    public AssetController(AssetRepository assetRepository) {
+        this.assetRepository = assetRepository;
     }
 
-    // Constructor đầy đủ
-    public Asset(Long id, String name, int quantity, String status) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.status = status;
+    // ✅ GET ALL
+    @GetMapping
+    public List<Asset> getAll() {
+        return assetRepository.findAll();
     }
 
-    // Getter & Setter
-
-    public Long getId() {
-        return id;
+    // ✅ CREATE
+    @PostMapping
+    public Asset create(@RequestBody Asset asset) {
+        return assetRepository.save(asset);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // ✅ UPDATE
+    @PutMapping("/{id}")
+    public Asset update(@PathVariable Long id, @RequestBody Asset asset) {
+        Asset existing = assetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Asset not found"));
+
+        existing.setName(asset.getName());
+        existing.setQuantity(asset.getQuantity());
+        existing.setStatus(asset.getStatus());
+
+        return assetRepository.save(existing);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    // ✅ DELETE
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        assetRepository.deleteById(id);
     }
 }
